@@ -11,6 +11,7 @@ public class StartAnimationTimer extends AnimationTimer{
 	Robo robo;
 	long startTime;
 	ImageView left,right,up,down,leftG,rightG,upG,downG;
+	private int time = 0;
 
 	public StartAnimationTimer(MainControler main,long startTime,Robo robo) {
 		this.mainCon = main;
@@ -27,13 +28,20 @@ public class StartAnimationTimer extends AnimationTimer{
 	}
 	@Override
 	public void handle(long currentTime) {
+		//called evety 10 msec.
+		time = time +10;
 		double t = (currentTime - startTime) / 1000000000.0; 
-		mainCon.timeLabel.setText(Double.toString(t));
+		mainCon.timeLabel.setText(Double.toString(time/1000.0));
 
 		tickAndRender();
 	}
 
-
+	/**
+	 * Update according to pressed key.
+	 * This function is called at every flame, and check if any key is pressed
+	 * (pressed key is stored in "currentlyActiveKeys"), and update the 
+	 * labels, state of robo, and position of rectangle.
+	 */
 	private void tickAndRender(){
 		String[] keys = {"LEFT","RIGHT","UP","DOWN"};
 		for(String k :keys){
@@ -73,57 +81,7 @@ public class StartAnimationTimer extends AnimationTimer{
 			}
 		}
 	}
-//		if (mainCon.currentlyActiveKeys.contains("LEFT")){
-//			mainCon.labelLeft.setGraphic(leftG);
-//			double[] nextState  = robo.forward("LEFT");
-//			if(true){
-//				robo.updateState(nextState);
-//				mainCon.rect.setX(robo.getX());
-//				mainCon.rect.setY(robo.getY());
-//				mainCon.rect.setRotate(robo.getAngle());
-//			}
-//		}else{
-//			mainCon.labelLeft.setGraphic(left);
-//		}
-//		
-//		if (mainCon.currentlyActiveKeys.contains("RIGHT")){
-//			mainCon.labelRight.setGraphic(rightG);
-//			double[] nextState  = robo.forward("RIGHT");
-//			if(true){
-//				robo.updateState(nextState);
-//				mainCon.rect.setX(robo.getX());
-//				mainCon.rect.setY(robo.getY());
-//				mainCon.rect.setRotate(robo.getAngle());
-//			}
-//		}else{
-//			mainCon.labelRight.setGraphic(right);
-//		}
-//		
-//		if (mainCon.currentlyActiveKeys.contains("UP")){
-//			mainCon.labelUp.setGraphic(upG);
-//			double[] nextState  = robo.forward("UP");
-//			if(true){
-//				robo.updateState(nextState);
-//				mainCon.rect.setX(robo.getX());
-//				mainCon.rect.setY(robo.getY());
-//				mainCon.rect.setRotate(robo.getAngle());
-//			}
-//		}else{
-//			mainCon.labelUp.setGraphic(up);
-//		}
-//		
-//		if (mainCon.currentlyActiveKeys.contains("DOWN")){
-//			mainCon.labelDown.setGraphic(downG);
-//			double[] nextState  = robo.forward("DOWN");
-//			if(true){
-//				robo.updateState(nextState);
-//				mainCon.rect.setX(robo.getX());
-//				mainCon.rect.setY(robo.getY());
-//				mainCon.rect.setRotate(robo.getAngle());
-//			}
-//		}else{
-//			mainCon.labelDown.setGraphic(down);
-//		}
+
 	private void updateRect(String k){
 		double[] nextState  = robo.forward(k);
 		if(true){
