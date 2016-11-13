@@ -3,6 +3,7 @@ import javafx.beans.NamedArg;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
+
 public class Robo {
     private final double width ;
     private final double height ;
@@ -13,7 +14,10 @@ public class Robo {
     private double vr = 0.0;
     private double vl = 0.0;
     private double angle = 0.0;
-    private final double  MAXSP = 5.0;
+    private double distance =0.0;
+    private double battery  =100.0;
+    private final double  MAXSP = 2.0;
+    private final double MAXDIS = 800;
 
     public Robo(@NamedArg("width") double width, @NamedArg("height") double height,
     		@NamedArg("wRadius") double wRadius,@NamedArg("wDistance") double wDistance) {
@@ -30,17 +34,15 @@ public class Robo {
     public double getVl(){return vl;}
     public double getVr(){return vr;}
     public double getAngle(){return angle;}
+    public double getDistance(){return distance;}
+    public double getBattery(){return battery;}
     public void setX(double val){x =val;}
     public void setY(double val){y =val;}
     public void setVl(double val){vl = val;}
     public void setVr(double val){vr = val;}
     public void setAngle(double val){angle = val;}
-//    public final StringProperty firstNameProperty() { return firstName; }
-//    public final String getFirstName() { return firstNameProperty().get(); }
-//    public final void setFirstName(final String firstName) { firstNameProperty().set(firstName); }
-//    public final StringProperty lastNameProperty() { return lastName; }
-//    public final String getLastName() { return lastNameProperty().get(); }
-//    public final void setLastName(final String lastName) { lastNameProperty().set(lastName); }
+    public void setDistance(double val){distance = val;}
+    public void setBattery(double val){battery = val;}
 
 	public double[] forward(String direction) {
 		double[] state = new double[5];
@@ -66,6 +68,11 @@ public class Robo {
 	}
 
 	public void updateState(double[] state) {
+		distance += Math.sqrt(Math.pow((x+width/2.0*Math.cos(angle/180*Math.PI)
+										-(state[0]+width/2.0*Math.cos(state[4]/180*Math.PI))), 2) 
+							+ Math.pow((y-width/2.0*Math.sin(angle/180*Math.PI)
+										-(state[1]-width/2.0*Math.sin(state[4]/180*Math.PI))), 2));
+		battery = (MAXDIS - distance)/MAXDIS*100;
 		this.x = state[0];
 		this.y = state[1];
 		this.vr = state[2];

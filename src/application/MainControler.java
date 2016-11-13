@@ -23,6 +23,8 @@ public class MainControler {
 	@FXML
 	Label timeLabel;
 	@FXML
+	Label locLabel;
+	@FXML
 	Rectangle rect;
 	@FXML
 	Button restart;
@@ -51,11 +53,13 @@ public class MainControler {
 			robo.setX(30.0);
 			robo.setY(210.0);
 			robo.setAngle(0.0);
+			robo.setDistance(0.0);
 			rect.setX(30.0);
 			rect.setY(210.0);
 			rect.setRotate(0.0);
 			rect.setWidth(robo.getWidth());
 			rect.setHeight(robo.getHeight());
+			locLabel.setText("x: " +String.format("%3.1f", robo.getX())+ ", y: "+String.format("%3.1f", robo.getY())+ ", angle: "+String.format("%3.1f", robo.getAngle()));
 			final long startNanoTime = System.nanoTime();
 			AnimationTimer at = new StartAnimationTimer(this,startNanoTime,robo);
 			at.start();
