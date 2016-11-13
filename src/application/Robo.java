@@ -5,7 +5,7 @@ import javafx.beans.property.StringProperty;
 
 
 public class Robo {
-    private final double width ;
+    private final double width;
     private final double height ;
     private final double wRadius;
     private final double wDistance;
@@ -18,7 +18,15 @@ public class Robo {
     private double battery  =100.0;
     private final double  MAXSP = 2.0;
     private final double MAXDIS = 800;
-
+    
+    public Robo(){
+    	width = 10;
+    	height = 10;
+    	wRadius = 10;
+    	wDistance =10;
+    	x = 10;
+    	y = 100;
+    }
     public Robo(@NamedArg("width") double width, @NamedArg("height") double height,
     		@NamedArg("wRadius") double wRadius,@NamedArg("wDistance") double wDistance) {
         this.width = width;
@@ -73,10 +81,10 @@ public class Robo {
 							+ Math.pow((y-width/2.0*Math.sin(angle/180*Math.PI)
 										-(state[1]-width/2.0*Math.sin(state[4]/180*Math.PI))), 2));
 		battery = (MAXDIS - distance)/MAXDIS*100;
-		this.x = state[0];
-		this.y = state[1];
-		this.vr = state[2];
-		this.vl = state[3];
-		this.angle = state[4];
+		x = state[0];
+		y = state[1];
+		vr = state[2];
+		vl = state[3];
+		angle = state[4];
 	}
 }

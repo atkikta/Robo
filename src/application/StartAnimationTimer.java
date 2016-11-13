@@ -3,6 +3,7 @@ package application;
 import javafx.animation.AnimationTimer;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.paint.Color;
 import javafx.scene.transform.Translate;
 
 public class StartAnimationTimer extends AnimationTimer{
@@ -11,8 +12,8 @@ public class StartAnimationTimer extends AnimationTimer{
 	Robo robo;
 	long startTime;
 	ImageView left,right,up,down,leftG,rightG,upG,downG;
-	private int time = 0;
-	private final double EPS = 0.0000000001;
+	protected int time = 0;
+	protected double EPS = 0.0000000001;
 
 	public StartAnimationTimer(MainControler main,long startTime,Robo robo) {
 		this.mainCon = main;
@@ -56,6 +57,7 @@ public class StartAnimationTimer extends AnimationTimer{
 				else{
 					mainCon.labelLeft.setGraphic(left);
 				}
+				break;
 			case "RIGHT":
 				if (mainCon.currentlyActiveKeys.contains(k)){
 					mainCon.labelRight.setGraphic(rightG);
@@ -64,6 +66,7 @@ public class StartAnimationTimer extends AnimationTimer{
 				else{
 					mainCon.labelRight.setGraphic(right);
 				}
+				break;
 			case "UP":
 				if (mainCon.currentlyActiveKeys.contains(k)){
 					mainCon.labelUp.setGraphic(upG);
@@ -72,6 +75,7 @@ public class StartAnimationTimer extends AnimationTimer{
 				else{
 					mainCon.labelUp.setGraphic(up);
 				}
+				break;
 			case "DOWN":
 				if (mainCon.currentlyActiveKeys.contains(k)){
 					mainCon.labelDown.setGraphic(downG);
@@ -80,6 +84,7 @@ public class StartAnimationTimer extends AnimationTimer{
 				else{
 					mainCon.labelDown.setGraphic(down);
 				}
+				break;
 			}
 		}
 	}
@@ -90,7 +95,14 @@ public class StartAnimationTimer extends AnimationTimer{
  */
 	private void updateRect(String k){
 		double[] nextState  = robo.forward(k);
-		if(isSafe(nextState)){
+		if(robo.getBattery()<0){
+			mainCon.timeLabel.setText("No Battery");
+			this.stop();
+		}
+		else if(!isSafe(nextState)){
+			mainCon.timeLabel.setText("Crash!!");
+		}
+		else{
 			robo.updateState(nextState);
 			double w = robo.getWidth();
 			double h = robo.getHeight();
@@ -98,8 +110,13 @@ public class StartAnimationTimer extends AnimationTimer{
 			mainCon.rect.setX(robo.getX() +Math.sqrt(w*w+h*h)/2.0*Math.sin(Math.atan(w/h)-ang/180*Math.PI)-w/2.0);
 			mainCon.rect.setY(robo.getY() +Math.sqrt(w*w+h*h)/2.0*Math.cos(Math.atan(w/h)-ang/180*Math.PI)-h/2.0);
 			mainCon.rect.setRotate(ang);
+			if(robo.getBattery()<10.0){
+				mainCon.timeLabel.setTextFill(Color.RED);
+			}else{
+				mainCon.timeLabel.setTextFill(Color.BLACK);
+			}
 			mainCon.timeLabel.setText("distance: " + String.format("%3.1f", robo.getDistance())+
-										", battery: "+ String.format("%2.1f", robo.getBattery())); 
+										", battery: "+ String.format("%2.1f", robo.getBattery())+"%"); 
 			mainCon.locLabel.setText("x: " +String.format("%3.1f", robo.getX())+
 									", y: "+String.format("%3.1f", robo.getY())+ 
 									", angle: "+String.format("%3.1f", robo.getAngle()));
@@ -123,7 +140,8 @@ public class StartAnimationTimer extends AnimationTimer{
 		double[] side2 = {x2,y2,x3,y3};
 		double[] side3 = {x3,y3,x0,y0};
 		double[][] sides = {side0,side1,side2,side3};
-		double[][] walls = {{0,0,300,0},{300,0,300,300},{300,300,0,300},{0,300,0,0}};
+		double[][] walls = {{0,0,300,0},{300,0,300,300},{300,300,0,300},{0,300,0,0},
+							{100,300,100,100},{200,0,200,200}};
 		
 		for(double[] s:sides){
 			for(double[] w:walls){
@@ -141,4 +159,6 @@ public class StartAnimationTimer extends AnimationTimer{
 	private double cross(double x0, double y0, double x1, double y1){
 		return x0*y1 - x1*y0;
 	}
+	
+
 }

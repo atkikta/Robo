@@ -9,15 +9,15 @@
 <AnchorPane fx:id="pane" onKeyPressed="#addPressedKey" onKeyReleased="#removeReleasedKey" prefHeight="300" prefWidth="500" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.MainControler">
    <children>
       <Button fx:id="restart" layoutX="307.0" layoutY="244.0" mnemonicParsing="false" onAction="#startMode" text="Start" />
-      <Button fx:id="record" layoutX="364.0" layoutY="244.0" mnemonicParsing="false" text="Record" />
+      <Button fx:id="record" layoutX="364.0" layoutY="244.0" mnemonicParsing="false" onAction="#recordMode" text="Record" />
       <Button fx:id="replay" layoutX="434.0" layoutY="244.0" mnemonicParsing="false" text="Replay" />
       <Label fx:id="timeLabel" layoutX="307.0" layoutY="209.0" prefHeight="25.0" prefWidth="182.0" text="---" />
       <Label fx:id="locLabel" layoutX="307.0" layoutY="175.0" prefHeight="25.0" prefWidth="182.0" text="---" />
       <Rectangle fx:id="rect" arcHeight="5.0" arcWidth="5.0" height="50.0" width="30.0" />
-      <Label fx:id="labelUp" layoutX="330.0" layoutY="40.0" prefHeight="30.0" prefWidth="30.0" />
-      <Label fx:id="labelRight" layoutX="360.0" layoutY="70.0" prefHeight="30.0" prefWidth="30.0" />
-      <Label fx:id="labelDown" layoutX="330.0" layoutY="100.0" prefHeight="30.0" prefWidth="30.0" />
-      <Label fx:id="labelLeft" layoutX="300.0" layoutY="70.0" prefHeight="30.0" prefWidth="30.0" />
+      <Label fx:id="labelUp" layoutX="340.0" layoutY="40.0" prefHeight="30.0" prefWidth="30.0" />
+      <Label fx:id="labelRight" layoutX="370.0" layoutY="70.0" prefHeight="30.0" prefWidth="30.0" />
+      <Label fx:id="labelDown" layoutX="340.0" layoutY="100.0" prefHeight="30.0" prefWidth="30.0" />
+      <Label fx:id="labelLeft" layoutX="310.0" layoutY="70.0" prefHeight="30.0" prefWidth="30.0" />
       <Line endX="300.0" endY="300.0" startX="300.0" />
       <Line endX="100.0" endY="300.0" startX="100.0" startY="100.0" />
       <Line endX="200.0" endY="200.0" startX="200.0" />
