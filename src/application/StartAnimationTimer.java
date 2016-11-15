@@ -28,6 +28,9 @@ public class StartAnimationTimer extends AnimationTimer{
 		upG = new ImageView(new Image( "s_upG.png" ));
 		downG   = new ImageView(new Image( "s_downG.png" ));
 	}
+	/**
+	 * call the function tickAndRender once in 10 msec.
+	 */
 	@Override
 	public void handle(long currentTime) {
 		//called evety 10 msec.
@@ -93,7 +96,7 @@ public class StartAnimationTimer extends AnimationTimer{
  * Update the position, angle, speed, distance and battery of robo.
  * Update the position of rectangle.
  */
-	private void updateRect(String k){
+	protected void updateRect(String k){
 		double[] nextState  = robo.forward(k);
 		if(robo.getBattery()<0){
 			mainCon.timeLabel.setText("No Battery");
@@ -124,7 +127,7 @@ public class StartAnimationTimer extends AnimationTimer{
 		}
 	}
 	
-	private boolean isSafe(double[] nS){
+	protected boolean isSafe(double[] nS){
 		boolean result = true;
 		double ang = nS[4]/180*Math.PI;
 		double x0 = nS[0];

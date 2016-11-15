@@ -15,7 +15,9 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Translate;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Date;
@@ -33,6 +35,8 @@ public class MainControler {
 	@FXML
 	Button record;
 	@FXML
+	Button replay;
+	@FXML
 	AnchorPane pane;
 	@FXML
 	Label labelUp;
@@ -46,15 +50,15 @@ public class MainControler {
 
 	AnimationTimer at;
 	FileWriter filewriter;
+	BufferedReader bufferedreader;
 	HashSet<String> currentlyActiveKeys;
 	public MainControler(){
 		currentlyActiveKeys = new HashSet<String>();
 	}
 	
 	public void startMode(ActionEvent event){
-		Button b = (Button)event.getSource();
-		if(b.getText().equals("Restart")){ at.stop(); }
-		b.setText("Restart");
+		if(restart.getText().equals("Restart")){ at.stop(); }
+		restart.setText("Restart");
 		Robo robo = initializeRobo();	
 		initializeRect(robo);
 		final long startNanoTime = System.nanoTime();
@@ -62,19 +66,26 @@ public class MainControler {
 		at.start();
 	}
 	public void recordMode(ActionEvent event){
-		Button b = (Button)event.getSource();
 		// if current recording process is on, stop it.
-		if(b.getText().equals("Stop")){ 
+		if(restart.getText().equals("Restart")){
 			at.stop(); 
-			b.setText("Record");
+			restart.setText("Start");}
+		if(replay.getText().equals("Replay")){at.stop();}
+		if(record.getText().equals("Stop")){ 
+			restart.setDisable(false);
+			replay.setDisable(false);
+			at.stop(); 
+			record.setText("Record");
 			try {
 				filewriter.close();
 			}catch (IOException e) {
 				System.out.println(e);
 			}
-		}
+		}//if currently not recording, start recording.
 		else{
-			b.setText("Stop");
+			restart.setDisable(true);
+			replay.setDisable(true);
+			record.setText("Stop");
 			try{
 				  filewriter = new FileWriter(new File("record.txt"));
 				  Robo robo = initializeRobo();	
@@ -90,6 +101,42 @@ public class MainControler {
 		}
 		
 	}
+	public void replayMode(ActionEvent event){
+		// if current recording process is on, stop it.
+		if(restart.getText().equals("Restart")){
+			at.stop(); 
+			restart.setText("Start");}
+		if(replay.getText().equals("Stop")){ 
+			restart.setDisable(false);
+			record.setDisable(false);
+			at.stop(); 
+			replay.setText("Replay");
+			try {
+				bufferedreader.close();
+			}catch (IOException e) {
+				System.out.println(e);
+			}
+		}//if currently not recording, start recording.
+		else{
+			restart.setDisable(true);
+			record.setDisable(true);
+			replay.setText("Stop");
+			try{
+				bufferedreader = new BufferedReader(new FileReader(new File("record.txt")));
+				Robo robo = initializeRobo();	
+				initializeRect(robo);
+					
+				final long startNanoTime = System.nanoTime();
+				at = new ReplayAnimationTimer(this,startNanoTime,robo,bufferedreader);
+				at.start();
+				  
+			}catch(IOException e){
+				  System.out.println(e);
+			}
+		}
+		
+	}
+	
 	private Robo initializeRobo(){
 		try{
 			Robo robo = FXMLLoader.load(MainControler.class.getResource("/application/Robo.fxml"));
