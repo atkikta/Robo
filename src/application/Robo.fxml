@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?import application.Robo?>
-<Robo width="30" height="30" wRadius = "5" wDistance = "40" xmlns:fx="http://javafx.com/fxml/1" />
+<Robo width="30" height="50" speed = "4" wDistance = "30" xmlns:fx="http://javafx.com/fxml/1" />
 

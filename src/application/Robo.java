@@ -2,12 +2,16 @@ package application;
 import javafx.beans.NamedArg;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-
+/**
+ * This is the class for the robot to be simulated.
+ * It reads the attributes from a fxml file.
+ * Methods to update the state of the robot are implemented.
+ * @author Kita
+ */
 
 public class Robo {
     private final double width;
     private final double height ;
-    private final double wRadius;
     private final double wDistance;
     private double x;
     private double y;
@@ -16,23 +20,30 @@ public class Robo {
     private double angle = 0.0;
     private double distance =0.0;
     private double battery  =100.0;
-    private final double  MAXSP = 2.0;
-    private final double MAXDIS = 800;
+    private final double maxSp ;
+    private final double maxDis= 800;
     
     public Robo(){
     	width = 10;
     	height = 10;
-    	wRadius = 10;
     	wDistance =10;
     	x = 10;
     	y = 100;
+    	maxSp = 2;
     }
+    /**
+     * Instance is created based on a fxml file.
+     * @param width
+     * @param height
+     * @param wDistance
+     * @param speed
+     */
     public Robo(@NamedArg("width") double width, @NamedArg("height") double height,
-    		@NamedArg("wRadius") double wRadius,@NamedArg("wDistance") double wDistance) {
+    		@NamedArg("wDistance") double wDistance,@NamedArg("speed") double speed) {
         this.width = width;
         this.height = height;
-        this.wRadius = wRadius;
         this.wDistance = wDistance;
+        this.maxSp = speed;
     }
 
     public double getWidth(){return width;}
@@ -52,21 +63,34 @@ public class Robo {
     public void setDistance(double val){distance = val;}
     public void setBattery(double val){battery = val;}
 
+    
+    /**
+     * Calcurate the one state of the robot one step forward.
+     * @param direction String either one of "UP","DOWN","LEFT", or"RIGHT".
+     * @return array of length 5; {x, y, vr, vl, angle}.
+     * <ul>
+	 * <li>x: x coordinate of the left upper corner of the robot.
+	 * <li>y: y coordinate of the left upper corner of the robot.
+	 * <li>vr: speed of the right wheel.
+	 * <li>vl: speed of the left wheel.
+	 * <li>angle: rotation of the robot, measured clockwise in radian.
+	 * </ul>
+     */
 	public double[] forward(String direction) {
 		double[] state = new double[5];
 		double x,y,vr,vl,angle;
 		if(direction.equals("LEFT")){
-			vr = MAXSP;
-			vl = MAXSP/2.0;
+			vr = maxSp;
+			vl = maxSp/2.0;
 		}else if(direction.equals("UP")){
-			vr = MAXSP;
-			vl = MAXSP;
+			vr = maxSp;
+			vl = maxSp;
 		}else if(direction.equals("RIGHT")){
-			vr = MAXSP/2.0;
-			vl = MAXSP;
+			vr = maxSp/2.0;
+			vl = maxSp;
 		}else{
-			vr = -MAXSP;
-			vl = -MAXSP;
+			vr = -maxSp;
+			vl = -maxSp;
 		}
 		angle = this.angle - (vr - vl)/wDistance*360/(2*Math.PI);
 		x = this.x + (vr + vl)/2.0 * Math.sin(angle/180 *Math.PI);
@@ -74,13 +98,24 @@ public class Robo {
 		state[0] = x; state[1] = y; state[2] = vr; state[3] = vl; state[4] = angle;
 		return state;
 	}
-
+/**
+ * Update the state of the robot based on the given next state.
+ * Distance covered, battery left, positin, speed, and rotation are updated.
+ * @param state array of length 5; {x, y, vr, vl, angle}.
+     * <ul>
+	 * <li>x: x coordinate of the left upper corner of the robot.
+	 * <li>y: y coordinate of the left upper corner of the robot.
+	 * <li>vr: speed of the right wheel.
+	 * <li>vl: speed of the left wheel.
+	 * <li>angle: rotation of the robot, measured clockwise in radian.
+	 * </ul>
+ */
 	public void updateState(double[] state) {
 		distance += Math.sqrt(Math.pow((x+width/2.0*Math.cos(angle/180*Math.PI)
 										-(state[0]+width/2.0*Math.cos(state[4]/180*Math.PI))), 2) 
 							+ Math.pow((y-width/2.0*Math.sin(angle/180*Math.PI)
 										-(state[1]-width/2.0*Math.sin(state[4]/180*Math.PI))), 2));
-		battery = (MAXDIS - distance)/MAXDIS*100;
+		battery = (maxDis - distance)/maxDis*100;
 		x = state[0];
 		y = state[1];
 		vr = state[2];

@@ -5,7 +5,17 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import javafx.scene.transform.Translate;
-
+/**
+ * This class describes the animation of the application in the Start mode.
+ * In the Start mode, the robot moves around the maze according to cursor key.
+ * The position and the angle of the robot is shown real time on screen.
+ * The distance covered and battery level is shown real time on screen.
+ * When the battery level is less than 10 %, the text message becomes red.
+ * When the battery level becomes 0, the robot stops.
+ * User can restart the game any time.
+ * @author Kita
+ *
+ */
 public class StartAnimationTimer extends AnimationTimer{
 
 	MainControler mainCon;
@@ -29,26 +39,23 @@ public class StartAnimationTimer extends AnimationTimer{
 		downG   = new ImageView(new Image( "s_downG.png" ));
 	}
 	/**
-	 * call the function tickAndRender once in 10 msec.
+	 * Update the time and call the function tickAndRender once in 10 msec.
 	 */
 	@Override
 	public void handle(long currentTime) {
 		//called evety 10 msec.
 		time = time +10;
-		double t = (currentTime - startTime) / 1000000000.0; 
-		//mainCon.timeLabel.setText(Double.toString(time/1000.0));
-
 		tickAndRender();
 	}
 
 	/**
-	 * Update according to pressed key.
+	 * Update according to the pressed key.
 	 * This function is called at every flame, and check if any key is pressed
 	 * (pressed key is stored in "currentlyActiveKeys"), and update the 
 	 * labels of picture of cursor key.
-	 * Call "updateRect" to update the state of robo, and position of rectangle.
+	 * Call "updateRect" to update the state of robo and position of rectangle.
 	 */
-	private void tickAndRender(){
+	protected void tickAndRender(){
 		String[] keys = {"LEFT","RIGHT","UP","DOWN"};
 		for(String k :keys){
 			switch(k){
@@ -91,10 +98,13 @@ public class StartAnimationTimer extends AnimationTimer{
 			}
 		}
 	}
-/**
+/*
  * Check if the next step is valid or not by calling "isSafe".
- * Update the position, angle, speed, distance and battery of robo.
- * Update the position of rectangle.
+ * If the next step is valid, do the following.
+ * 
+ * -Update the position, angle, speed, distance and battery of robo.
+ * -Update the position of rectangle.
+ * 
  */
 	protected void updateRect(String k){
 		double[] nextState  = robo.forward(k);
@@ -126,7 +136,27 @@ public class StartAnimationTimer extends AnimationTimer{
 
 		}
 	}
-	
+	/*
+	 * Checks if the next state is crashing into walls or not.
+	 * Receives the information on the next step as array nS = {x,y,vr,vl,angle}.
+	 * -x: x coordinate of the left upper corner of the robot.
+	 * -y: y coordinate of the left upper corner of the robot.
+	 * -vr: speed of the right wheel.
+	 * -vl: speed of the left wheel.
+	 * -angle: rotation of the robot, measured clockwise in radian.
+	 * 
+	 * Calculate the position of 4 vertices of robot.
+	 * For each combination of walls and sides of the robot, check if the lines are intersected or not.
+	 * 
+	 * When there is two lines a-b and c-d, if the cross product between the vector ab and achas a different 
+	 * sign from the cross product between ab and ad, the points c and d is on the different side of the line ab.
+	 * If points c and d are on different side of line ab, and points a and b are on different side of line cd,
+	 * then the lines are crossed.
+	 * 
+	 * 
+	 * @param nS Array of length 5 that descrives the next state.
+	 * @return Returns true if none of the combinations is intersected.
+	 */
 	protected boolean isSafe(double[] nS){
 		boolean result = true;
 		double ang = nS[4]/180*Math.PI;

@@ -23,6 +23,15 @@ import java.io.IOException;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Random;
+
+/**
+ * This class describes the action to be taken by the application when 
+ * <ul> <li> a button is pressed.
+ *      <li> a key is pressed.
+ * </ul>
+ * @author Kita
+ *
+ */
 public class MainControler {
 	@FXML
 	Label timeLabel;
@@ -52,10 +61,15 @@ public class MainControler {
 	FileWriter filewriter;
 	BufferedReader bufferedreader;
 	HashSet<String> currentlyActiveKeys;
+	
 	public MainControler(){
 		currentlyActiveKeys = new HashSet<String>();
 	}
-	
+	/**
+	 * This method is called when the Start button (at the left in the window) is clicked.
+	 * Initialise the robo and the rectangle, and then start the animation timer.
+	 * @param event
+	 */
 	public void startMode(ActionEvent event){
 		if(restart.getText().equals("Restart")){ at.stop(); }
 		restart.setText("Restart");
@@ -65,12 +79,19 @@ public class MainControler {
 		at = new StartAnimationTimer(this,startNanoTime,robo);
 		at.start();
 	}
+	/**
+	 * This method is called when the Record button (at the middle in the window) is clicked.
+	 * Initialise the robo and the rectangle, create the file object, and then start the animation timer.
+	 * During recording, other buttons are disabled, and the text on record button becomes "stop".
+	 * When the recording is stopped, other buttons are enabled and the animation timer stops.
+	 * 
+	 * @param event
+	 */
 	public void recordMode(ActionEvent event){
 		// if current recording process is on, stop it.
 		if(restart.getText().equals("Restart")){
 			at.stop(); 
 			restart.setText("Start");}
-		if(replay.getText().equals("Replay")){at.stop();}
 		if(record.getText().equals("Stop")){ 
 			restart.setDisable(false);
 			replay.setDisable(false);
@@ -101,6 +122,14 @@ public class MainControler {
 		}
 		
 	}
+	/**
+	 * This method is called when the Replay button (at the right in the window) is clicked.
+	 * Initialise the robo and the rectangle, create the file object, and then start the animation timer.
+	 * During recording, other buttons are disabled, and the text on replay button becomes "stop".
+	 * When the replay is stopped, other buttons are enabled and the animation timer stops.
+	 *
+	 * @param event
+	 */
 	public void replayMode(ActionEvent event){
 		// if current recording process is on, stop it.
 		if(restart.getText().equals("Restart")){
@@ -163,10 +192,19 @@ public class MainControler {
 				", battery: "+ String.format("%2.1f", robo.getBattery())+"%");
 
 	}
-	
+	/**
+	 * When a key is pressed, the name of the key is stored in "currentlyActiveKeys".
+	 * It is stored in the HashSet in order to avoid duplication.
+	 * 
+	 * @param event
+	 */
 	public void addPressedKey(KeyEvent event){
 		currentlyActiveKeys.add(event.getCode().toString());
 	}
+	/**
+	 * When a key is released, the key is removed from the HashSet "currentlyActiveKeys".
+	 * @param event
+	 */
 	public void removeReleasedKey(KeyEvent event){
 		currentlyActiveKeys.remove(event.getCode().toString());
 	}
